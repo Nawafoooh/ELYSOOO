@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظم المهام الدراسية</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjNGY0NmU1Ii8+CjxwYXRoIGQ9Ik00OCA5NmgzMm0wIDBoMzJtLTMyIDBoMCAzMm0wLTMydi0zMiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            color: #4f46e5;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .add-task-form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background: #4338ca;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+            width: auto;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-success {
+            background: #10b981;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .tasks-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+        
+        .task-item {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-right: 4px solid #4f46e5;
+            transition: transform 0.2s ease;
+        }
+        
+        .task-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .task-item.completed {
+            opacity: 0.7;
+            border-right-color: #10b981;
+        }
+        
+        .task-item.urgent {
+            border-right-color: #ef4444;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .task-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+        
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+        
+        .task-description {
+            color: #4b5563;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .priority-high {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        
+        .priority-medium {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+        
+        .priority-low {
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #374151;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4f46e5;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .task-header {
+                flex-direction: column;
+            }
+            
+            .task-actions {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 منظم المهام الدراسية</h1>
+            <p>نظم واجباتك ومواعيد امتحاناتك بسهولة</p>
+        </div>
+        
+        <div class="add-task-form">
+            <h2 style="margin-bottom: 20px; color: #374151;">إضافة مهمة جديدة</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">عنوان المهمة</label>
+                    <input type="text" id="taskTitle" required placeholder="مثال: حل واجب الرياضيات">
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">وصف المهمة</label>
+                    <textarea id="taskDescription" rows="3" placeholder="تفاصيل إضافية عن المهمة..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskSubject">المادة</label>
+                        <select id="taskSubject" required>
+                            <option value="">اختر المادة</option>
+                            <option value="رياضيات">رياضيات</option>
+                            <option value="فيزياء">فيزياء</option>
+                            <option value="كيمياء">كيمياء</option>
+                            <option value="أحياء">أحياء</option>
+                            <option value="عربي">لغة عربية</option>
+                            <option value="إنجليزي">لغة إنجليزية</option>
+                            <option value="تاريخ">تاريخ</option>
+                            <option value="جغرافيا">جغرافيا</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskPriority">الأولوية</label>
+                        <select id="taskPriority" required>
+                            <option value="low">منخفضة</option>
+                            <option value="medium">متوسطة</option>
+                            <option value="high">عالية</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskType">نوع المهمة</label>
+                        <select id="taskType" required>
+                            <option value="واجب">واجب منزلي</option>
+                            <option value="امتحان">امتحان</option>
+                            <option value="مشروع">مشروع</option>
+                            <option value="مراجعة">مراجعة</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskDate">تاريخ التسليم</label>
+                        <input type="date" id="taskDate" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">إضافة المهمة</button>
+            </form>
+        </div>
+        
+        <div class="tasks-section">
+            <h2 style="margin-bottom: 20px; color: #374151;">مهامي</h2>
+            
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalTasks">0</span>
+                    <div class="stat-label">إجمالي المهام</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="pendingTasks">0</span>
+                    <div class="stat-label">قيد الإنجاز</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="completedTasks">0</span>
+                    <div class="stat-label">مكتملة</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="urgentTasks">0</span>
+                    <div class="stat-label">عاجلة</div>
+                </div>
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="pending">قيد الإنجاز</button>
+                <button class="filter-btn" data-filter="completed">مكتملة</button>
+                <button class="filter-btn" data-filter="urgent">عاجلة</button>
+            </div>
+            
+            <div id="tasksList">
+                <div class="empty-state">
+                    <h3>🎯 لا توجد مهام حالياً</h3>
+                    <p>ابدأ بإضافة مهمتك الأولى!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تسجيل Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // بيانات التطبيق
+        let tasks = JSON.parse(localStorage.getItem('studentTasks')) || [];
+        let currentFilter = 'all';
+
+        // عناصر DOM
+        const taskForm = document.getElementById('taskForm');
+        const tasksList = document.getElementById('tasksList');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        // تهيئة التطبيق
+        document.addEventListener('DOMContentLoaded', function() {
+            setMinDate();
+            renderTasks();
+            updateStats();
+        });
+
+        // تحديد الحد الأدنى للتاريخ
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDate').min = today;
+        }
+
+        // إضافة مهمة جديدة
+        taskForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const task = {
+                id: Date.now(),
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDescription').value,
+                subject: document.getElementById('taskSubject').value,
+                priority: document.getElementById('taskPriority').value,
+                type: document.getElementById('taskType').value,
+                date: document.getElementById('taskDate').value,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+            
+            tasks.push(task);
+            saveTasks();
+            renderTasks();
+            updateStats();
+            taskForm.reset();
+            
+            // رسالة نجاح
+            showNotification('تم إضافة المهمة بنجاح! ✅');
+        });
+
+        // حفظ المهام في localStorage
+        function saveTasks() {
+            localStorage.setItem('studentTasks', JSON.stringify(tasks));
+        }
+
+        // عرض المهام
+        function renderTasks() {
+            const filteredTasks = getFilteredTasks();
+            
+            if (filteredTasks.length === 0) {
+                tasksList.innerHTML = `
+                    <div class="empty-state">
+                        <h3>🎯 لا توجد مهام في هذا التصنيف</h3>
+                        <p>جرب تصنيف آخر أو أضف مهمة جديدة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            tasksList.innerHTML = filteredTasks.map(task => {
+                const isUrgent = isTaskUrgent(task.date);
+                const priorityClass = `priority-${task.priority}`;
+                const formattedDate = formatDate(task.date);
+                
+                return `
+                    <div class="task-item ${task.completed ? 'completed' : ''} ${isUrgent ? 'urgent' : ''}" data-id="${task.id}">
+                        <div class="task-header">
+                            <div>
+                                <div class="task-title">${task.title}</div>
+                                <div class="task-meta">
+                                    <span>📚 ${task.subject}</span>
+                                    <span>📅 ${formattedDate}</span>
+                                    <span class="${priorityClass}">🔥 ${getPriorityText(task.priority)}</span>
+                                    <span>📋 ${task.type}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                        
+                        <div class="task-actions">
+                            <button class="btn btn-small ${task.completed ? 'btn-success' : ''}" onclick="toggleTask(${task.id})">
+                                ${task.completed ? '✅ مكتملة' : '⏳ إنجاز'}
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="deleteTask(${task.id})">
+                                🗑️ حذف
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // الحصول على المهام المفلترة
+        function getFilteredTasks() {
+            let filtered = tasks;
+            
+            switch(currentFilter) {
+                case 'pending':
+                    filtered = tasks.filter(task => !task.completed);
+                    break;
+                case 'completed':
+                    filtered = tasks.filter(task => task.completed);
+                    break;
+                case 'urgent':
+                    filtered = tasks.filter(task => isTaskUrgent(task.date) && !task.completed);
+                    break;
+            }
+            
+            // ترتيب حسب التاريخ والأولوية
+            return filtered.sort((a, b) => {
+                if (a.completed !== b.completed) {
+                    return a.completed - b.completed;
+                }
+                
+                const priorityOrder = { high: 3, medium: 2, low: 1 };
+                if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+                    return priorityOrder[b.priority] - priorityOrder[a.priority];
+                }
+                
+                return new Date(a.date) - new Date(b.date);
+            });
+        }
+
+        // تبديل حالة المهمة
+        function toggleTask(id) {
+            tasks = tasks.map(task => {
+                if (task.id === id) {
+                    task.completed = !task.completed;
+                }
+                return task;
+            });
+            
+            saveTasks();
+            renderTasks();
+            updateStats();
+            
+            const task = tasks.find(t => t.id === id);
+            showNotification(task.completed ? 'أحسنت! تم إنجاز المهمة 🎉' : 'تم إلغاء إنجاز المهمة');
+        }
+
+        // حذف مهمة
+        function deleteTask(id) {
+            if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+                tasks = tasks.filter(task => task.id !== id);
+                saveTasks();
+                renderTasks();
+                updateStats();
+                showNotification('تم حذف المهمة');
+            }
+        }
+
+        // تحديث الإحصائيات
+        function updateStats() {
+            const total = tasks.length;
+            const pending = tasks.filter(task => !task.completed).length;
+            const completed = tasks.filter(task => task.completed).length;
+            const urgent = tasks.filter(task => isTaskUrgent(task.date) && !task.completed).length;
+            
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('pendingTasks').textContent = pending;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('urgentTasks').textContent = urgent;
+        }
+
+        // التحقق من المهام العاجلة
+        function isTaskUrgent(taskDate) {
+            const today = new Date();
+            const task = new Date(taskDate);
+            const diffTime = task - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays <= 3 && diffDays >= 0;
+        }
+
+        // تنسيق التاريخ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const today = new Date();
+            const diffTime = date - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return 'اليوم';
+            if (diffDays === 1) return 'غداً';
+            if (diffDays === -1) return 'أمس';
+            if (diffDays > 1) return `خلال ${diffDays} أيام`;
+            if (diffDays < -1) return `متأخر ${Math.abs(diffDays)} أيام`;
+            
+            return date.toLocaleDateString('ar-SA');
+        }
+
+        // النص للأولوية
+        function getPriorityText(priority) {
+            const priorities = {
+                high: 'عالية',
+                medium: 'متوسطة',
+                low: 'منخفضة'
+            };
+            return priorities[priority];
+        }
+
+        // إدارة الفلاتر
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // عرض الإشعارات
+        function showNotification(message) {
+            // إنشاء عنصر الإشعار
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            // إضافة الأنيميشن
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // إزالة الإشعار بعد 3 ثواني
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                    document.head.removeChild(style);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+
+    <!-- Web App Manifest -->
+    <script>
+        // إنشاء manifest.json ديناميكياً
+        const manifest = {
+            "name": "منظم المهام الدراسية",
+            "short_name": "منظم المهام",
+            "description": "تطبيق لتنظيم الواجبات والمهام الدراسية",
+            "start_url": "/",
+            "display": "standalone",
+            "background_color": "#667eea",
+            "theme_color": "#4f46e5",
+            "orientation": "portrait-primary",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjNGY0NmU1Ii8+CjxwYXRoIGQ9Ik00OCA5NmgzMm0wIDBoMzJtLTMyIDBoMCAzMm0wLTMydi0zMiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml"
+                },
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjNGY0NmU1Ii8+CjxwYXRoIGQ9Ik0xMjggMjU2aDg1Ljc5bTAgMGg4NS43OW0tODUuNzkgMGgwIDg1Ljc5bTAtODUuNzl2ODUuNzkiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMjAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml"
+                }
+            ],
+            "categories": ["education", "productivity"],
+            "lang": "ar",
+            "dir": "rtl"
+        };
+
+        // إنشاء Service Worker بسيط
+        const swContent = `
+            const CACHE_NAME = 'student-tasks-v1';
+            const urlsToCache = [
+                '/',
+                '/manifest.json'
+            ];
+
+            self.addEventListener('install', function(event) {
+                event.waitUntil(
+                    caches.open(CACHE_NAME)
+                        .then(function(cache) {
+                            return cache.addAll(urlsToCache);
+                        })
+                );
+            });
+
+            self.addEventListener('fetch', function(event) {
+                event.respondWith(
+                    caches.match(event.request)
+                        .then(function(response) {
+                            if (response) {
+                                return response;
+                            }
+                            return fetch(event.request);
+                        }
+                    )
+                );
+            });
+        `;
+
+        // محاكاة الملفات للعرض التوضيحي
+        if (typeof window !== 'undefined') {
+            // إضافة manifest للرأس
+            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+            const manifestUrl = URL.createObjectURL(manifestBlob);
+            document.querySelector('link[rel="manifest"]').href = manifestUrl;
+        }
+    </script>
+</body>
+</html>
