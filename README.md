@@ -163,9 +163,9 @@ firebase deploy
 
 ## 👨‍💻 المطور
 
-- **الاسم**: [اسمك]
-- **GitHub**: [@username](https://github.com/username)
-- **البريد الإلكتروني**: your.email@example.com
+- **الاسم**:Nawaf
+- **GitHub**: [@Nawafoooh](https://github.com/Nawafoooh)
+- **البريد الإلكتروني**: nawafalsobhi@gmail.com
 
 ## 🙏 شكر وتقدير
 
