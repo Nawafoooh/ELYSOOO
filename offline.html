@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غير متصل - منظم المهام الدراسية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .offline-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 20px;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .offline-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .offline-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #4f46e5;
+        }
+        
+        .offline-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        .retry-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .retry-btn:hover {
+            background: #4338ca;
+        }
+        
+        .features {
+            margin-top: 30px;
+            text-align: right;
+        }
+        
+        .features h3 {
+            color: #4f46e5;
+            margin-bottom: 15px;
+        }
+        
+        .features ul {
+            list-style: none;
+            color: #666;
+        }
+        
+        .features li {
+            margin-bottom: 8px;
+            padding: 5px 0;
+        }
+        
+        .features li::before {
+            content: "✅ ";
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📱</div>
+        <h1 class="offline-title">أنت غير متصل بالإنترنت</h1>
+        <p class="offline-message">
+            لا تقلق! يمكنك الاستمرار في استخدام التطبيق لعرض وإدارة مهامك المحفوظة محلياً.
+        </p>
+        
+        <button class="retry-btn" onclick="window.location.reload()">
+            🔄 إعادة المحاولة
+        </button>
+        
+        <div class="features">
+            <h3>الميزات المتاحة بدون إنترنت:</h3>
+            <ul>
+                <li>عرض جميع المهام المحفوظة</li>
+                <li>إضافة مهام جديدة</li>
+                <li>تعديل حالة المهام</li>
+                <li>حذف المهام</li>
+                <li>تصفية المهام حسب النوع</li>
+                <li>عرض الإحصائيات</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // التحقق من الاتصال وإعادة التوجيه عند العودة
+        window.addEventListener('online', function() {
+            console.log('Connection restored');
+            window.location.href = '/';
+        });
+        
+        // محاولة الاتصال كل 30 ثانية
+        setInterval(() => {
+            if (navigator.onLine) {
+                window.location.href = '/';
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
